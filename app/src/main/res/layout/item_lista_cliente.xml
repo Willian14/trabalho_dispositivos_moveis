@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_fundo_layout_item_list">
+        <ImageView
+
+            android:id="@+id/imv_item_list"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+
+        <TextView
+            android:layout_below="@+id/imv_item_list"
+            android:id="@+id/txtNome_item_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/color_label"
+            android:text="willian"
+            android:textSize="30dp"
+            android:textStyle="italic" />
+
+
+        <TextView
+            android:id="@+id/txtTelefone_item_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtNome_item_list"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/color_label"
+            android:text="343498394839"
+            android:textSize="20dp"
+            android:textStyle="italic" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imv_cad"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/foto_base" />
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/float_bt_foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        app:fab_icon = "@drawable/ic_btn_foto"
+        />
+
+    <ScrollView
+        android:id="@+id/scv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imv_cad">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtNome_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/nome_label_cad"
+                android:textColor="@color/color_label"
+                android:textSize="30dp"
+                android:textStyle="italic" />
+
+
+            <EditText
+                android:id="@+id/edt_nome_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtNome_cad" />
+
+            <TextView
+                android:id="@+id/txtTelefone_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edt_nome_cad"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/telefone_label_cad"
+                android:textColor="@color/color_label"
+                android:textSize="30dp"
+                android:textStyle="italic" />
+
+            <EditText
+
+                android:id="@+id/edt_telefone_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtTelefone_cad" />
+
+
+            <EditText
+                android:id="@+id/edtData_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edt_telefone_cad"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/color_label"
+                android:textSize="30dp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtData_cad"
+                android:layout_marginLeft="70dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/btn_data_label_cad"
+                android:textColor="@color/color_label_botao"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/edtHora_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_data"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:textColor="@color/color_label"
+                android:textSize="30dp"
+                android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/btn_hora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtHora_cad"
+                android:layout_marginLeft="70dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/btn_hora_label_cad"
+                android:textColor="@color/color_label_botao"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spn_tipo_servico_cad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_hora"></Spinner>
+
+            <Button
+                android:id="@+id/btn_salvarCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spn_tipo_servico_cad"
+                android:text="@string/botao_salvar" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

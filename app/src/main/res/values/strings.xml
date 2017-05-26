@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AgendaBarbeariaApp</string>
+    <string name="btn_data_label_cad">Escolher Data</string>
+    <string name="btn_hora_label_cad">Escolher hora</string>
+    <string name="data_label_cad">Data:</string>
+    <string name="nome_label_cad">Nome:</string>
+    <string name="hora_label_cad">Hora:</string>
+    <string name="telefone_label_cad">Telefone:</string>
+    <string name="botao_salvar">Salvar</string>
+    <string name="fechar">Fechar</string>
+
+</resources>
