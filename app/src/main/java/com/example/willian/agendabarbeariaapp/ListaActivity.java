@@ -29,7 +29,6 @@ public class ListaActivity extends AppCompatActivity {
     Cliente cliente;
     private ClienteHelper helper;
     private List<Cliente> lista;
-
     private ClienteAdapter adapter;
 
     @Override
@@ -55,7 +54,6 @@ public class ListaActivity extends AppCompatActivity {
                 Intent cadCliente = new Intent(ListaActivity.this, CadastroActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("clienteSelecionado", clienteSelecionado);
-                System.out.println(clienteSelecionado);
                 cadCliente.putExtras(bundle);
 
                 startActivity(cadCliente);
@@ -119,9 +117,6 @@ public class ListaActivity extends AppCompatActivity {
         dao.close();
         adapter = new ClienteAdapter(this, lista);
         listaCliente.setAdapter(adapter);
-        for (Cliente c : lista) {
-            System.out.println(c);
-        }
     }
 
     @OnClick(R.id.floatbt)

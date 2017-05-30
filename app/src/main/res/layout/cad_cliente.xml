@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ImageView
@@ -11,15 +11,19 @@
         android:layout_height="200dp"
         android:src="@drawable/foto_base" />
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/float_bt_foto"
+    <Button
+        android:id="@+id/btn_foto"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_height="70dp"
+        android:layout_above="@+id/scv"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        app:fab_icon = "@drawable/ic_btn_foto"
-        />
+        android:layout_marginEnd="23dp"
+        android:layout_marginRight="23dp"
+        android:background="@drawable/ic_btn_foto"
+        android:elevation="5dp"
+        android:shadowColor="@color/color_bt_foto" />
+
 
     <ScrollView
         android:id="@+id/scv"
@@ -39,7 +43,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/nome_label_cad"
                 android:textColor="@color/color_label"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
 
@@ -58,15 +62,15 @@
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/telefone_label_cad"
                 android:textColor="@color/color_label"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
             <EditText
-
                 android:id="@+id/edt_telefone_cad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTelefone_cad" />
+                android:layout_below="@+id/txtTelefone_cad"
+                android:inputType="number" />
 
 
             <EditText
@@ -75,9 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/edt_telefone_cad"
                 android:layout_marginTop="20dp"
+                android:editable="false"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/color_label"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
             <Button
@@ -87,9 +92,10 @@
                 android:layout_below="@+id/edtData_cad"
                 android:layout_marginLeft="70dp"
                 android:fontFamily="sans-serif-condensed"
+                android:gravity="center"
                 android:text="@string/btn_data_label_cad"
                 android:textColor="@color/color_label_botao"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
 
@@ -99,9 +105,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_data"
                 android:layout_marginTop="20dp"
+                android:editable="false"
                 android:fontFamily="sans-serif-condensed"
                 android:textColor="@color/color_label"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
             <Button
@@ -111,9 +118,10 @@
                 android:layout_below="@+id/edtHora_cad"
                 android:layout_marginLeft="70dp"
                 android:fontFamily="sans-serif-condensed"
+                android:gravity="center"
                 android:text="@string/btn_hora_label_cad"
                 android:textColor="@color/color_label_botao"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -130,5 +138,6 @@
                 android:text="@string/botao_salvar" />
         </RelativeLayout>
     </ScrollView>
+
 
 </RelativeLayout>

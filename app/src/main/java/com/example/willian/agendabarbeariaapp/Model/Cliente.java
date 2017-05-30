@@ -15,7 +15,7 @@ public class Cliente implements Serializable {
     private String hora_agend;
     private String tipoServico;
     private Long id;
-    private int imagem;
+    private String caminhoFoto;
 
     public String getData_agend() {
         return data_agend;
@@ -65,12 +65,12 @@ public class Cliente implements Serializable {
         this.id = id;
     }
 
-    public int getImagem() {
-        return imagem;
+    public String getCaminhoFoto() {
+        return caminhoFoto;
     }
 
-    public void setImagem(int imagem) {
-        this.imagem = imagem;
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Cliente implements Serializable {
                 ", hora_agend='" + hora_agend + '\'' +
                 ", tipoServico='" + tipoServico + '\'' +
                 ", id=" + id +
-                ", imagem=" + imagem +
+                ", caminhoFoto='" + caminhoFoto + '\'' +
                 '}';
     }
 }

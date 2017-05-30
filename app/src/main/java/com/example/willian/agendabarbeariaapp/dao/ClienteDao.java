@@ -16,8 +16,8 @@ import java.util.List;
  */
 
 public class ClienteDao extends SQLiteOpenHelper {
-    final static String DATABASE = "CLIENTES";
-    final static int VERSION = 1;
+    final static String DATABASE = "DBCLIENTES";
+    final static int VERSION = 7;
     final static String TABLE = "cliente";
 
 
@@ -34,13 +34,19 @@ public class ClienteDao extends SQLiteOpenHelper {
                 "telefone text not null," +
                 "dataAgend text not null," +
                 "horaAgend text not null, " +
-                "tipoServico text );";
+                "tipoServico text" +
+                "caminhoFoto text );";
         db.execSQL(ddlCliente);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion <=7 && newVersion >=8) {
+            String ddl = "ALTER TABLE " + TABLE +
+                    " ADD COLUMN caminhoFoto text;";
+            db.execSQL(ddl);
+        }
 
     }
 
@@ -51,7 +57,7 @@ public class ClienteDao extends SQLiteOpenHelper {
         values.put("dataAgend", cliente.getData_agend());
         values.put("horaAgend", cliente.getHora_agend());
         values.put("tipoServico", cliente.getTipoServico());
-
+        values.put("caminhoFoto", cliente.getCaminhoFoto());
         return values;
 
     }
@@ -101,6 +107,7 @@ public class ClienteDao extends SQLiteOpenHelper {
         cliente.setData_agend(c.getString(c.getColumnIndex("dataAgend")));
         cliente.setHora_agend(c.getString(c.getColumnIndex("horaAgend")));
         cliente.setTipoServico(c.getString(c.getColumnIndex("tipoServico")));
+        cliente.setCaminhoFoto(c.getString(c.getColumnIndex("caminhoFoto")));
         return cliente;
 
     }
