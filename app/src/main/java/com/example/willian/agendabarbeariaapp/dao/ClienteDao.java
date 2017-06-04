@@ -89,6 +89,8 @@ public class ClienteDao extends SQLiteOpenHelper {
 
     }
 
+
+
     public List<Cliente> listarClientes() {
         Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE + " order by nome", null);
         List<Cliente> lista = new ArrayList<>();
@@ -98,6 +100,8 @@ public class ClienteDao extends SQLiteOpenHelper {
         c.close();
         return lista;
     }
+
+
 
     private Cliente fill(Cursor c) {
         Cliente cliente = new Cliente();

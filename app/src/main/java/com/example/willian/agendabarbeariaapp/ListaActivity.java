@@ -50,7 +50,7 @@ public class ListaActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Cliente clienteSelecionado = adapter.getItem(position);
-                System.out.println(clienteSelecionado);
+
                 Intent cadCliente = new Intent(ListaActivity.this, CadastroActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("clienteSelecionado", clienteSelecionado);

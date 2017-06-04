@@ -41,10 +41,13 @@ public class ClienteHelper {
     private String tipoServicoSelecionado;
     private Cliente cliente, clienteExistente;
     private List<Cliente> lista;
+    private List<String> listaDeDatas;
+    private List<String> listaDeDatasExistentes;
 
 
     SimpleDateFormat format = new SimpleDateFormat("HH:mm");
     SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat formatadorDataHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 
     public ClienteHelper(final CadastroActivity activity) {
@@ -78,6 +81,7 @@ public class ClienteHelper {
                 cliente = carregarDadosDaTela();
                 if (validarHoraEdata(cliente)) {
                     if (validarCampos()) {
+                        System.out.println(cliente.toString());
                         ClienteDao dao = new ClienteDao(activity);
                         if (cliente.getId() == 0) {
                             dao.insert(cliente);
@@ -143,111 +147,114 @@ public class ClienteHelper {
     }
 
     public boolean validarHoraEdata(Cliente cliente) {
-        this.cliente = cliente;
+
 
         boolean validar = true;
 
         ClienteDao dao = new ClienteDao(activity);
-        int quantPosterior = 0;
+        Calendar dataAgendada = Calendar.getInstance();
+
+        Calendar dataDigitada = Calendar.getInstance();
+        Calendar horaDigitada = Calendar.getInstance();
+
+        try {
+            dataDigitada.setTime(formatadorDataHora.parse(cliente.getData_agend()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            horaDigitada.setTime(format.parse(cliente.getHora_agend()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int anoDig = dataDigitada.get(Calendar.YEAR);
+        int mesDig = dataDigitada.get(Calendar.MONTH);
+        int diaDig = dataDigitada.get(Calendar.DAY_OF_MONTH);
+        int horaDig = horaDigitada.get(Calendar.HOUR_OF_DAY);
+        int minutoDig = horaDigitada.get(Calendar.MINUTE);
+        Calendar dataCliente = Calendar.getInstance();
+        dataCliente.set(anoDig,mesDig,diaDig,horaDig,minutoDig);
+
         lista = dao.listarClientes();
-        String data = cliente.getData_agend();
-        String horaCliente = cliente.getHora_agend();
-        Calendar dataAgend = Calendar.getInstance();
-        try {
-            dataAgend.setTime(formatDate.parse(data));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        Calendar horaAgend = Calendar.getInstance();
-        try {
-            horaAgend.setTime(format.parse(horaCliente));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         for (int i = 0; i < lista.size(); i++) {
-            Calendar horaClienteExist = Calendar.getInstance();
+            Calendar dataPosicao = Calendar.getInstance();
+            Calendar horaPosicao = Calendar.getInstance();
+            Calendar dataP = Calendar.getInstance();
             try {
-                horaClienteExist.setTime(format.parse(lista.get(i).getHora_agend()));
-
+                horaPosicao.setTime(format.parse(lista.get(i).getHora_agend()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Calendar dataClienteExist = Calendar.getInstance();
-
             try {
-                dataClienteExist.setTime(formatDate.parse(lista.get(i).getData_agend()));
+                dataPosicao.setTime(formatDate.parse(lista.get(i).getData_agend()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Calendar horaAnterior = Calendar.getInstance();
-            horaAnterior.setTime(horaClienteExist.getTime());
-            horaAnterior.add(Calendar.MINUTE, -30);
+            int ano = dataPosicao.get(Calendar.YEAR);
+            int mes = dataPosicao.get(Calendar.MONTH);
+            int dia = dataPosicao.get(Calendar.DAY_OF_MONTH);
+            int hora = horaPosicao.get(Calendar.HOUR_OF_DAY);
+            int minuto = horaPosicao.get(Calendar.MINUTE);
 
-            Calendar horaPosterior = Calendar.getInstance();
-            horaPosterior.setTime(horaClienteExist.getTime());
-            horaPosterior.add(Calendar.MINUTE, 30);
+            dataP.set(ano, mes, dia, hora, minuto);
+            Calendar dataPosterior = Calendar.getInstance();
+            dataPosterior.setTime(dataP.getTime());
+            dataPosterior.add(Calendar.MINUTE, 30);
+            dataP.add(Calendar.MINUTE, -1);
 
 
-            if (horaAgend.getTime().equals(horaPosterior.getTime())) {
-                quantPosterior = quantPosterior + 1;
-            }
-            if (quantPosterior > 0) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
-                dialogBuilder.setTitle("--->>>ERRO<<<---");
-                dialogBuilder.setMessage(
-                        String.format("Já exite um agendamento nesse horário ! Escolha um outro horário 30 Minutos após o que você Escolheu "));
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
 
-                        dialog.cancel();
-                    }
-                });
-
-                dialogBuilder.create().show();
-                validar = false;
-                break;
-            }
-
-        }
-
-            /*
-            int hora = horaAgend.get(Calendar.HOUR);
-            int minuto = horaAgend.get(Calendar.MINUTE);
-
-            for (int i = 0; i < lista.size(); i++) {
-                Calendar c = Calendar.getInstance();
-                try {
-                    c.setTime(format.parse(lista.get(i).getHora_agend()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                int h = c.get(Calendar.HOUR);
-                int m = c.get(Calendar.MINUTE);
-                if (hora == h || minuto == m || minuto == m + 29) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
-                    dialogBuilder.setTitle("--->>>ERRO<<<---");
-                    dialogBuilder.setMessage(
-                            String.format("Já exite um agendamento nesse horário ! Escolha um outro horário 30 Minutos após o que você Escolheu "));
-                    dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-
-                            dialog.cancel();
+                    if(dataCliente.after(dataP)  && dataCliente.before(dataPosterior)){
+                        String id = String.valueOf(cliente.getId());
+                        Cliente clienteEncontrado = dao.findById(id);
+                        if(clienteEncontrado!= null) {
+                            validar = true;
+                        }else {
+                            validar = false;
                         }
-                    });
 
-                    dialogBuilder.create().show();
-                    validar = false;
-
-                    // edHora.setError("Já existe um agendamento nesse horário! ");
-                    break;
+                    }
                 }
 
+
+
+
+
+/*
+        String id = String.valueOf(cliente.getId());
+        Cliente clienteEncontrado = dao.findById(id);
+
+        if (clienteEncontrado != null) {
+            Calendar dataDig = Calendar.getInstance();
+            Calendar horaDig = Calendar.getInstance();
+
+
+            try {
+                dataDig.setTime(formatDate.parse(clienteEncontrado.getData_agend()));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            try {
+                horaDig.setTime(format.parse(clienteEncontrado.getHora_agend()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            int anoDataDig = dataDig.get(Calendar.YEAR);
+            int mesDataDig = dataDig.get(Calendar.MONTH);
+            int diaDataDig = dataDig.get(Calendar.DAY_OF_MONTH);
+            int horaDataDig = horaDig.get(Calendar.HOUR_OF_DAY);
+            int minutoDataDig = horaDig.get(Calendar.MINUTE);
+
+
+            dataAgendada.set(anoDataDig, mesDataDig, diaDataDig, horaDataDig, minutoDataDig);
+
         }
-        */
+*/
+
         return validar;
     }
+
 
     public Button getBtFoto() {
         return btFoto;
@@ -262,7 +269,7 @@ public class ClienteHelper {
         cliente.setHora_agend("");
         cliente.setTipoServico("");
 
-        System.out.println(cliente);
+
         return cliente;
     }
 
