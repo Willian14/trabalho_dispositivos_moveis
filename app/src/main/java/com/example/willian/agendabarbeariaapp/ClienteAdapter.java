@@ -1,6 +1,5 @@
 package com.example.willian.agendabarbeariaapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +21,6 @@ import butterknife.ButterKnife;
 
 public class ClienteAdapter extends ArrayAdapter<Cliente> {
 
-    private Activity activity;
     public ClienteAdapter(Context context, List<Cliente> clienteList) {
         super(context, R.layout.item_lista_cliente, clienteList);
     }
@@ -52,26 +50,24 @@ public class ClienteAdapter extends ArrayAdapter<Cliente> {
             if (cliente.getCaminhoFoto() != null) {
                 bm = BitmapFactory.decodeFile(cliente.getCaminhoFoto());
                 holder.imagem.setImageBitmap(ImageCircle.crop(bm));
-            }
-            else {
-             holder.imagem.setImageResource(R.drawable.foto_base);
+            } else {
+                holder.imagem.setImageResource(R.drawable.foto_base);
             }
 
 
-    }
+        }
         return convertView;
 
 
-}
+    }
 
 
-
-class ViewHolder {
-    @Bind(R.id.imv_item_list)
-    ImageView imagem;
-    @Bind(R.id.txtNome_item_list)
-    TextView nome;
-    @Bind(R.id.txtTelefone_item_list)
-    TextView telefone;
-}
+    class ViewHolder {
+        @Bind(R.id.imv_item_list)
+        ImageView imagem;
+        @Bind(R.id.txtNome_item_list)
+        TextView nome;
+        @Bind(R.id.txtTelefone_item_list)
+        TextView telefone;
+    }
 }

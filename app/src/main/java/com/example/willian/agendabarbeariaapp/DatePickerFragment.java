@@ -20,8 +20,7 @@ import java.util.GregorianCalendar;
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
 
-     EditText edData;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    EditText edData;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,11 +39,10 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
 
-      edData = (EditText) getActivity().findViewById(R.id.edtData_cad);
-        edData.setText(day + "/" +(month +1) + "/" +year);
+        edData = (EditText) getActivity().findViewById(R.id.edtData_cad);
+        edData.setText(day + "/" + ( month + 1 ) + "/" + year);
 
     }
-
 
 
 }

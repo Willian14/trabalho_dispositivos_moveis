@@ -42,7 +42,7 @@ public class ClienteDao extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion <=7 && newVersion >=8) {
+        if (oldVersion <= 7 && newVersion >= 8) {
             String ddl = "ALTER TABLE " + TABLE +
                     " ADD COLUMN caminhoFoto text;";
             db.execSQL(ddl);
@@ -89,8 +89,6 @@ public class ClienteDao extends SQLiteOpenHelper {
 
     }
 
-
-
     public List<Cliente> listarClientes() {
         Cursor c = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE + " order by nome", null);
         List<Cliente> lista = new ArrayList<>();
@@ -100,8 +98,6 @@ public class ClienteDao extends SQLiteOpenHelper {
         c.close();
         return lista;
     }
-
-
 
     private Cliente fill(Cursor c) {
         Cliente cliente = new Cliente();

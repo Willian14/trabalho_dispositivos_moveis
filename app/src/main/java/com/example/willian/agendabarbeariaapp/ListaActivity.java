@@ -26,7 +26,6 @@ import butterknife.OnClick;
 
 public class ListaActivity extends AppCompatActivity {
     private ListView listaCliente;
-    Cliente cliente;
     private ClienteHelper helper;
     private List<Cliente> lista;
     private ClienteAdapter adapter;
@@ -57,6 +56,7 @@ public class ListaActivity extends AppCompatActivity {
                 cadCliente.putExtras(bundle);
 
                 startActivity(cadCliente);
+
 
             }
         });

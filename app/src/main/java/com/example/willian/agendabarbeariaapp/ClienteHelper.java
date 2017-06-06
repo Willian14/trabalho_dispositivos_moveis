@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.willian.agendabarbeariaapp.Model.Cliente;
 import com.example.willian.agendabarbeariaapp.dao.ClienteDao;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,10 +43,9 @@ public class ClienteHelper {
     private String tipoServicoSelecionado;
     private Cliente cliente, clienteExistente;
     private List<Cliente> lista;
-    private List<String> listaDeDatas;
-    private List<String> listaDeDatasExistentes;
 
 
+    String[] sampleImages = {};
     SimpleDateFormat format = new SimpleDateFormat("HH:mm");
     SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat formatadorDataHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -61,6 +62,8 @@ public class ClienteHelper {
         edTelefone = (EditText) activity.findViewById(R.id.edt_telefone_cad);
         edData = (EditText) activity.findViewById(R.id.edtData_cad);
         edHora = (EditText) activity.findViewById(R.id.edtHora_cad);
+
+
         spinnerTipoServico.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -150,109 +153,152 @@ public class ClienteHelper {
 
 
         boolean validar = true;
+        boolean horaAnterior = true;
+        String datDig = edData.getText().toString();
+        String horDig = edHora.getText().toString();
+        String dataValid = datDig + " " + horDig;
+        Calendar dataDig = Calendar.getInstance();
+        try {
+            dataDig.setTime(formatadorDataHora.parse(dataValid));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        Calendar dataAtual = Calendar.getInstance();
+        dataAtual.add(Calendar.SECOND, -59);
+        if (dataDig.before(dataAtual)) {
+            horaAnterior = false;
+        }
         ClienteDao dao = new ClienteDao(activity);
-        Calendar dataAgendada = Calendar.getInstance();
 
-        Calendar dataDigitada = Calendar.getInstance();
-        Calendar horaDigitada = Calendar.getInstance();
+        if (horaAnterior == true) {
+            lista = dao.listarClientes();
+            String data = cliente.getData_agend();
+            String hora = cliente.getHora_agend();
+            String dataDigitada = data + " " + hora;
+            String dataClienteAlterando = null;
+            String acao = "cadastrar";
+            String id = String.valueOf(cliente.getId());
+            Cliente clienteEncontrado = dao.findById(id);
 
-        try {
-            dataDigitada.setTime(formatadorDataHora.parse(cliente.getData_agend()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-            horaDigitada.setTime(format.parse(cliente.getHora_agend()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        int anoDig = dataDigitada.get(Calendar.YEAR);
-        int mesDig = dataDigitada.get(Calendar.MONTH);
-        int diaDig = dataDigitada.get(Calendar.DAY_OF_MONTH);
-        int horaDig = horaDigitada.get(Calendar.HOUR_OF_DAY);
-        int minutoDig = horaDigitada.get(Calendar.MINUTE);
-        Calendar dataCliente = Calendar.getInstance();
-        dataCliente.set(anoDig,mesDig,diaDig,horaDig,minutoDig);
-
-        lista = dao.listarClientes();
-
-        for (int i = 0; i < lista.size(); i++) {
-            Calendar dataPosicao = Calendar.getInstance();
-            Calendar horaPosicao = Calendar.getInstance();
-            Calendar dataP = Calendar.getInstance();
-            try {
-                horaPosicao.setTime(format.parse(lista.get(i).getHora_agend()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if (clienteEncontrado != null) {
+                acao = "alterar";
             }
-            try {
-                dataPosicao.setTime(formatDate.parse(lista.get(i).getData_agend()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            int ano = dataPosicao.get(Calendar.YEAR);
-            int mes = dataPosicao.get(Calendar.MONTH);
-            int dia = dataPosicao.get(Calendar.DAY_OF_MONTH);
-            int hora = horaPosicao.get(Calendar.HOUR_OF_DAY);
-            int minuto = horaPosicao.get(Calendar.MINUTE);
+            if (acao.equals("alterar")) {
+                String dataE = clienteEncontrado.getData_agend().toString();
+                String horaE = clienteEncontrado.getHora_agend();
+                dataClienteAlterando = dataE + " " + horaE;
+                if (dataDigitada.equals(dataClienteAlterando)) {
+                    validar = true;
+                } else {
+                    Calendar dataCliente = Calendar.getInstance();
+                    try {
+                        dataCliente.setTime(formatadorDataHora.parse(dataDigitada));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < lista.size(); i++) {
+                        String dataP = lista.get(i).getData_agend().toString();
+                        String horaP = lista.get(i).getHora_agend().toString();
+                        String dataPosition = dataP + " " + horaP;
+                        Calendar dataPosicao = Calendar.getInstance();
 
-            dataP.set(ano, mes, dia, hora, minuto);
-            Calendar dataPosterior = Calendar.getInstance();
-            dataPosterior.setTime(dataP.getTime());
-            dataPosterior.add(Calendar.MINUTE, 30);
-            dataP.add(Calendar.MINUTE, -1);
-
-
-
-                    if(dataCliente.after(dataP)  && dataCliente.before(dataPosterior)){
-                        String id = String.valueOf(cliente.getId());
-                        Cliente clienteEncontrado = dao.findById(id);
-                        if(clienteEncontrado!= null) {
-                            validar = true;
-                        }else {
-                            validar = false;
+                        try {
+                            dataPosicao.setTime(formatadorDataHora.parse(dataPosition));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
+                        Calendar dataPosterior = Calendar.getInstance();
+                        dataPosterior.setTime(dataPosicao.getTime());
+                        dataPosterior.add(Calendar.MINUTE, 30);
+                        if (dataCliente.compareTo(dataPosicao) == 0 || dataCliente.after(dataPosicao)
+                                && dataCliente.before(dataPosterior) || dataCliente.compareTo(dataPosterior) == 0) {
+                            String dialog = formatadorDataHora.format(dataPosicao.getTime());
 
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+                            dialogBuilder.setTitle("Erro");
+                            dialogBuilder.setMessage(
+                                    String.format("Já existe agendamento nesse horário! selecione 30 min. a partir de -->> %s", dialog));
+                            dialogBuilder.setPositiveButton("Retornar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                    dialog.cancel();
+                                }
+                            });
+                            dialogBuilder.create().show();
+                            validar = false;
+
+
+                        }
                     }
                 }
-
-
-
-
-
-/*
-        String id = String.valueOf(cliente.getId());
-        Cliente clienteEncontrado = dao.findById(id);
-
-        if (clienteEncontrado != null) {
-            Calendar dataDig = Calendar.getInstance();
-            Calendar horaDig = Calendar.getInstance();
-
-
-            try {
-                dataDig.setTime(formatDate.parse(clienteEncontrado.getData_agend()));
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
-            try {
-                horaDig.setTime(format.parse(clienteEncontrado.getHora_agend()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+
+            if (acao.equals("cadastrar")) {
+                String dataE = edData.getText().toString();
+                String horaE = edHora.getText().toString();
+                String dataClienteCadastrando = dataE + " " + horaE;
+
+                Calendar dataCliente = Calendar.getInstance();
+                try {
+                    dataCliente.setTime(formatadorDataHora.parse(dataClienteCadastrando));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < lista.size(); i++) {
+                    String dataP = lista.get(i).getData_agend().toString();
+                    String horaP = lista.get(i).getHora_agend().toString();
+                    String dataPosition = dataP + " " + horaP;
+                    Calendar dataPosicao = Calendar.getInstance();
+
+                    try {
+                        dataPosicao.setTime(formatadorDataHora.parse(dataPosition));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Calendar dataPosterior = Calendar.getInstance();
+                    dataPosterior.setTime(dataPosicao.getTime());
+                    dataPosterior.add(Calendar.MINUTE, 30);
+
+                    if (dataCliente.compareTo(dataPosicao) == 0 || dataCliente.after(dataPosicao)
+                            && dataCliente.before(dataPosterior) || dataCliente.compareTo(dataPosterior) == 0) {
+                        String dialog = formatadorDataHora.format(dataPosicao.getTime());
+
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+                        dialogBuilder.setTitle("Erro");
+                        dialogBuilder.setMessage(
+                                String.format("Já existe agendamento nesse horário! selecione 30 min. a partir de -->> %s", dialog));
+                        dialogBuilder.setPositiveButton("Retornar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                dialog.cancel();
+                            }
+                        });
+                        dialogBuilder.create().show();
+                        validar = false;
+
+                        break;
+                    }
+                }
             }
-            int anoDataDig = dataDig.get(Calendar.YEAR);
-            int mesDataDig = dataDig.get(Calendar.MONTH);
-            int diaDataDig = dataDig.get(Calendar.DAY_OF_MONTH);
-            int horaDataDig = horaDig.get(Calendar.HOUR_OF_DAY);
-            int minutoDataDig = horaDig.get(Calendar.MINUTE);
+        } else {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+            dialogBuilder.setTitle("Erro");
+            dialogBuilder.setMessage(
+                    String.format("Impossível selecionar Hora ou data anteriores a atual!"));
+            dialogBuilder.setPositiveButton("Retornar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
 
-
-            dataAgendada.set(anoDataDig, mesDataDig, diaDataDig, horaDataDig, minutoDataDig);
-
+                    dialog.cancel();
+                }
+            });
+            dialogBuilder.create().show();
+            horaAnterior = false;
+            validar = false;
         }
-*/
 
         return validar;
+
     }
 
 

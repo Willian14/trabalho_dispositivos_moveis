@@ -17,7 +17,7 @@ class ImageFilePath {
     public static String getPath(final Context context, final Uri uri) {
         final boolean isJellyBeanMR1 = Build.VERSION.SDK_INT>= Build.VERSION_CODES.JELLY_BEAN_MR1;
         if (isJellyBeanMR1 && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
+
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -26,14 +26,14 @@ class ImageFilePath {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             }
-            // DownloadsProvider
+
             else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
-            // MediaProvider
+
             else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -43,13 +43,13 @@ class ImageFilePath {
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         }
-        // MediaStore
+
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
         }
-        // File
+
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
